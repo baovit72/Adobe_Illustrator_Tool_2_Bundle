@@ -67,7 +67,7 @@ function process(imgPath, opt)
         app.doScript("Composition","Automation Set");
        //Deselect all paths
       // $.sleep(2000);
-        app.doScript("Deselect","Automation Set");
+         
         app.redraw();
         //Tien hanh lay compound path
         var array = activeDoc.pathItems;
@@ -153,36 +153,49 @@ function process(imgPath, opt)
             }
          
          //Tao compound Shape 
-          for(var i=  0; i< array.length; i++){  
+         var countPathItem = activeDoc.pathItems.length;
+         var  i =0;
+         while(countPathItem>0){   
+             
+             array = activeDoc.pathItems;
+              $.writeln  ("Running " + i);
+             $.writeln(array[i].parent.typename);
+             $.writeln(array[i].typename);
+             $.writeln(array.length);
                 if(array[i].typename.toLowerCase() === "compoundpathitem" )
                     {
-                        activeDoc.selection = null;
-                     //app.doScript("Deselect","Automation Set"); 
+                        activeDoc.selection = null; 
                        array[i].selected = true;
                       app.doScript("Select same","Automation Set");
                       app.doScript("Compound","Automation Set");
+                      app.redraw();
                     }
                 //Path item thi tien hanh kiem tra
                 else{
-                    activeDoc.selection = null; 
-                    //app.doScript("Deselect","Automation Set");
-                     if(array[i].typename.toLowerCase() !== "pathitem") continue;
+                    activeDoc.selection = null;  
+                     if(array[i].typename.toLowerCase() !== "pathitem"  ) continue;
                        array[i].selected = true;
                       app.doScript("Select same","Automation Set");
                       app.doScript("Compound","Automation Set");
-                    }
+                       app.redraw();
+                    }  
+               //i++;
+             //$.writeln(array[i].typename); 
+             countPathItem = activeDoc.pathItems.length;
             }
        
          $.writeln ("Compound shape number :" + app.activeDocument.layers[0].compoundPathItems.length);
          
     
             
-            //Luu file
+          //Luu file
             saveAllFiles(activeDoc,imgPath,"_color");
              app.doScript("Black","Automation Set"); 
+             app.redraw();
             saveAllFiles(activeDoc,imgPath,"_black");
               app.doScript("White","Automation Set"); 
             saveAllFiles(activeDoc,imgPath,"_white");
+            app.redraw();
            
             
         $.writeln ( "Item in compound:" + compoundCount);
